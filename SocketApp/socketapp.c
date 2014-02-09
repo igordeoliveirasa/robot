@@ -146,19 +146,17 @@ static int handle_connection(struct socket_app_state *s)
         char token[20] = "";
         strncpy(token, t, 20);
         
+        char command[5] = "";
+        char option[5] = "";        
+        char str_pin[5] = "";
+        int pin = 0;
+        strncpy(command, token, 2);        
         
-        char command[3] = "";
-        char option[3] = "";        
-        char str_pin[3] = "";
-        
-        strncpy(command, token, 2);
-        strncpy(option, token+2, 2);        
-        strncpy(str_pin, token+4, 2);        
-        
-        int pin = atoi(str_pin);
-        
-                            
         if (strncmp(command, "PM", 2)==0) {
+          strncpy(option, token+2, 2);        
+          strncpy(str_pin, token+4, 2);        
+          pin = atoi(str_pin);
+          
           if (strncmp(option, "OU", 2)==0) {
               pinMode(pin, OUTPUT);
           }
@@ -167,12 +165,24 @@ static int handle_connection(struct socket_app_state *s)
           }
         }          
         else if (strncmp(command, "DW", 2)==0) {
+          strncpy(option, token+2, 2);        
+          strncpy(str_pin, token+4, 2);        
+          pin = atoi(str_pin);
+
           if (strncmp(option, "HI", 2)==0) {
               digitalWrite(pin, HIGH);
           }
           else if (strncmp(option, "LO", 2)==0) {
               digitalWrite(pin, LOW);
           }
+        }        
+        //AW25504
+        else if (strncmp(command, "AW", 2)==0) {
+          strncpy(option, token+2, 3);
+          int power = atoi(option);
+          strncpy(str_pin, token+5, 2);        
+          pin = atoi(str_pin);
+          analogWrite(pin, power);
         }
                        
         t = strtok(NULL, tokenizer);
