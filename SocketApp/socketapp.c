@@ -140,23 +140,42 @@ static int handle_connection(struct socket_app_state *s)
       //PMOU01, PMIN12
       //DWHI03, DWLO04
       
-      char* token = "|";
-      char* t = strtok(s->inputbuffer, token);     
+      char* tokenizer = "|";
+      char* t = strtok(s->inputbuffer, tokenizer);     
       while (t!=NULL) {
-
-        char str_pin[2];
-        strncpy(str_pin, t+4 , 2);
+        char token[20] = "";
+        strncpy(token, t, 20);
+        
+        
+        char command[3] = "";
+        char option[3] = "";        
+        char str_pin[3] = "";
+        
+        strncpy(command, token, 2);
+        strncpy(option, token+2, 2);        
+        strncpy(str_pin, token+4, 2);        
+        
         int pin = atoi(str_pin);
         
-        if (strncmp(t, "PMOU", 4)==0) {
-          PSOCK_SEND_STR(&s->p, "Entrou 1\n");
-          pinMode(pin, OUTPUT);
+                            
+        if (strncmp(command, "PM", 2)==0) {
+          if (strncmp(option, "OU", 2)==0) {
+              pinMode(pin, OUTPUT);
+          }
+          else if (strncmp(option, "IN", 2)==0) {
+              pinMode(pin, INPUT);
+          }
+        }          
+        else if (strncmp(command, "DW", 2)==0) {
+          if (strncmp(option, "HI", 2)==0) {
+              digitalWrite(pin, HIGH);
+          }
+          else if (strncmp(option, "LO", 2)==0) {
+              digitalWrite(pin, LOW);
+          }
         }
-        else if (strncmp(t, "DWHI", 4)==0) {
-          PSOCK_SEND_STR(&s->p, "Entrou 2\n");
-          digitalWrite(pin, HIGH);
-        }
-        t = strtok(NULL, token);
+                       
+        t = strtok(NULL, tokenizer);
       }
     }      
   }
