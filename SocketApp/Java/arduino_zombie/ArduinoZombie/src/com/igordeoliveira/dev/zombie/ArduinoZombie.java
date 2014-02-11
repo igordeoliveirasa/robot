@@ -10,6 +10,12 @@ package com.igordeoliveira.dev.zombie;
  */
 public class ArduinoZombie implements IArduinoZombie {
 
+    public ArduinoZombie(String address, int port, String password) throws Exception {
+        if (!address.equals("192.168.1.200") || port != 41085 || !password.equals("123")) {
+            throw new Exception("");
+        }
+    }
+
 
     @Override
     public IArduinoZombie pinMode(int pin, int pinType) {
