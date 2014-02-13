@@ -37,6 +37,22 @@ public class ArduinoZombieTests {
         }
     }
     
+    
+    @Test
+    public void testGetInstance() {
+        try {
+            socket.close();
+            ArduinoZombie arduino = ArduinoZombie.getInstance("192.168.1.200", 41085, "123");
+            arduino.getCommunication().getIn().close();
+            arduino.getCommunication().getOut().close();
+            assertNotNull(arduino);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+    
+        
+    
     @After
     public void tearDown() {
         try {
@@ -87,5 +103,8 @@ public class ArduinoZombieTests {
     public void testAnalogWritePin3() {
         boolean result = arduino.pinMode(3, ArduinoConstants.OUTPUT).analogWrite(3, 200).flush();
         assertTrue(result);
-    }    
+    }
+    
+    
+    
 }

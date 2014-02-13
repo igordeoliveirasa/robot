@@ -4,7 +4,12 @@
  */
 package com.igordeoliveira.dev.zombie;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,20 +19,32 @@ import java.util.logging.Logger;
  *
  * @author igor
  */
-public class ArduinoZombie implements IArduinoZombie {
-    private ArduinoCommunication communication;
-    private List<String> stack = new ArrayList<String>();
+public class ArduinoZombie {
 
-    public List<String> getStack() {
-        return stack;
+    private ArduinoCommunication communication;
+
+    public ArduinoCommunication getCommunication() {
+        return communication;
     }
+    private List<String> stack = new ArrayList<String>();
+    
     
     public ArduinoZombie(ArduinoCommunication communication) {
         this.communication = communication;
     }
     
-    @Override
-    public IArduinoZombie pinMode(int pin, int pinType) {
+    static ArduinoZombie getInstance(String address, int port, String password) {
+        try {
+            Socket socket = new Socket(address, port);
+            ArduinoCommunication arduinoCommunication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), password);
+            ArduinoZombie arduino = new ArduinoZombie(arduinoCommunication);
+            return arduino;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public ArduinoZombie pinMode(int pin, int pinType) {
         String command = "PM";
         
         if (pinType == ArduinoConstants.OUTPUT) {
@@ -43,8 +60,8 @@ public class ArduinoZombie implements IArduinoZombie {
         return this;
     }
 
-    @Override
-    public IArduinoZombie digitalWrite(int pin, int digitalMessage) {
+    
+    public ArduinoZombie digitalWrite(int pin, int digitalMessage) {
         String command = "DW";
         
         if (digitalMessage == ArduinoConstants.HIGH) {
@@ -61,16 +78,19 @@ public class ArduinoZombie implements IArduinoZombie {
         return this;
     }
 
-    @Override
-    public IArduinoZombie analogWrite(int pin, int value) {
+    
+    public ArduinoZombie analogWrite(int pin, int value) {
         String command = "AW";
         command += String.format("%03d", value);
         command += String.format("%02d", pin);
         this.stack.add(command);
         return this;
     }
-
-    @Override
+    
+    public List<String> getStack() {
+        return stack;
+    }
+    
     public boolean flush() {
         try {
             String command = this.convertStackIntoCommand();
@@ -82,6 +102,7 @@ public class ArduinoZombie implements IArduinoZombie {
         }
     }
     
+
     public String convertStackIntoCommand() {
         String ret = "";
         String sep = "";
@@ -90,6 +111,6 @@ public class ArduinoZombie implements IArduinoZombie {
             sep = "|";
         }
         return ret;
-    }
+    }    
     
 }
