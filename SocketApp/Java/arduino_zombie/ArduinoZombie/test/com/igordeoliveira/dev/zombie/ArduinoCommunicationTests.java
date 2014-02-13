@@ -39,20 +39,7 @@ public class ArduinoCommunicationTests {
     public void testValidConnection() {
         try {
             Socket socket = new Socket("192.168.1.200", 41085);
-            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())));
-            socket.close();
-        } catch (IOException ex) {
-            fail();
-        }
-    }
-
-    @Test
-    public void testSendData() {
-        try {
-            Socket socket = new Socket("192.168.1.200", 41085);
-            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())));
-            String result = communication.println("123");
-            assertEquals("ok", result);
+            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), "123");
             socket.close();
         } catch (IOException ex) {
             fail();
@@ -63,11 +50,8 @@ public class ArduinoCommunicationTests {
     public void testPMOU03_and_DWHI03() {
         try {
             Socket socket = new Socket("192.168.1.200", 41085);
-            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())));
-            String result = communication.println("123");
-            assertEquals("ok", result);
-
-            result = communication.println("PMOU03|DWHI03");
+            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), "123");
+            String result = communication.println("PMOU03|DWHI03");
             assertEquals("ok", result);
             socket.close();
         } catch (IOException ex) {
@@ -79,11 +63,8 @@ public class ArduinoCommunicationTests {
     public void testDWLO03() {
         try {
             Socket socket = new Socket("192.168.1.200", 41085);
-            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())));
-            String result = communication.println("123");
-            assertEquals("ok", result);
-
-            result = communication.println("DWLO03");
+            communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), "123");
+            String result = communication.println("DWLO03");
             assertEquals("ok", result);
             socket.close();
         } catch (IOException ex) {

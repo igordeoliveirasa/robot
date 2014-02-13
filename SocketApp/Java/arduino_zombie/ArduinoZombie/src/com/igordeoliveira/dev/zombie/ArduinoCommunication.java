@@ -32,10 +32,13 @@ public class ArduinoCommunication {
         this.in = in;
     }
     
-    public ArduinoCommunication(PrintWriter out, BufferedReader in) throws IOException {
+    public ArduinoCommunication(PrintWriter out, BufferedReader in, String password) throws IOException {
         this.out = out;
         this.in = in;
-        in.readLine();
+        
+        System.out.println(in.readLine());
+        String result = this.println(password);
+        System.out.println(result);
     }
 
     public String println(String string) throws IOException {
