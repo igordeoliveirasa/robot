@@ -8,7 +8,7 @@ package com.igordeoliveira.dev.zombie;
  *
  * @author igor
  */
-public class Arduino {
+public class ArduinoConstants {
     public static final int HIGH = 1;
     public static final int LOW = 0;
     public static final int OUTPUT = 1;

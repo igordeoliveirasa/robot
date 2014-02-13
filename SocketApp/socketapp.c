@@ -118,24 +118,22 @@ static int handle_connection(struct socket_app_state *s)
   
   PSOCK_BEGIN(&s->p);
   
-  
-  PSOCK_SEND_STR(&s->p, "Tell me the password, sucker: ");
+  memset(s->inputbuffer, 0x00, sizeof(s->inputbuffer));
+  PSOCK_SEND_STR(&s->p, "ok\n");
   PSOCK_READTO(&s->p, '\n');
-    
+  
   if (strncmp(s->inputbuffer, "123", 3)==0) {
     
-    PSOCK_SEND_STR(&s->p, "Access Granted!\n");
+    PSOCK_SEND_STR(&s->p, "ok\n");
 
     while (1) {
       memset(s->inputbuffer, 0x00, sizeof(s->inputbuffer));
-      PSOCK_SEND_STR(&s->p, "Im waiting your command: ");
       PSOCK_READTO(&s->p, '\n');
       
       if (strncmp(s->inputbuffer, "exit", 4)==0) {
-        PSOCK_SEND_STR(&s->p, "Good Bye!\n");
+        PSOCK_SEND_STR(&s->p, "ok\n");
         break;   
       }
-        
       
       //PMOU01, PMIN12
       //DWHI03, DWLO04
@@ -159,9 +157,14 @@ static int handle_connection(struct socket_app_state *s)
           
           if (strncmp(option, "OU", 2)==0) {
               pinMode(pin, OUTPUT);
+              PSOCK_SEND_STR(&s->p, "ok\n");
           }
           else if (strncmp(option, "IN", 2)==0) {
               pinMode(pin, INPUT);
+              PSOCK_SEND_STR(&s->p, "ok\n");
+          }
+          else {
+            PSOCK_SEND_STR(&s->p, "fail\n");
           }
         }          
         else if (strncmp(command, "DW", 2)==0) {
@@ -171,9 +174,14 @@ static int handle_connection(struct socket_app_state *s)
 
           if (strncmp(option, "HI", 2)==0) {
               digitalWrite(pin, HIGH);
+              PSOCK_SEND_STR(&s->p, "ok\n");
           }
           else if (strncmp(option, "LO", 2)==0) {
               digitalWrite(pin, LOW);
+              PSOCK_SEND_STR(&s->p, "ok\n");
+          }
+          else {
+            PSOCK_SEND_STR(&s->p, "fail\n");
           }
         }        
         //AW25504
@@ -183,8 +191,11 @@ static int handle_connection(struct socket_app_state *s)
           strncpy(str_pin, token+5, 2);        
           pin = atoi(str_pin);
           analogWrite(pin, power);
+          PSOCK_SEND_STR(&s->p, "ok\n");
         }
-                       
+        else {
+            PSOCK_SEND_STR(&s->p, "fail\n");
+        }
         t = strtok(NULL, tokenizer);
       }
     }      
