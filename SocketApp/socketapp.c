@@ -139,7 +139,7 @@ static int handle_connection(struct socket_app_state *s)
       //DWHI03, DWLO04
       
       char* tokenizer = "|";
-      char* t = strtok(s->inputbuffer, tokenizer);     
+      char* t = strtok(s->inputbuffer, tokenizer);
       while (t!=NULL) {
         char token[20] = "";
         strncpy(token, t, 20);
