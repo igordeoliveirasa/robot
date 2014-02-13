@@ -33,7 +33,7 @@ public class ArduinoZombie {
         this.communication = communication;
     }
     
-    static ArduinoZombie getInstance(String address, int port, String password) {
+    public static ArduinoZombie getInstance(String address, int port, String password) {
         try {
             Socket socket = new Socket(address, port);
             ArduinoCommunication arduinoCommunication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), password);
@@ -95,6 +95,7 @@ public class ArduinoZombie {
         try {
             String command = this.convertStackIntoCommand();
             String result = communication.println(command);
+            stack.clear();
             return result.equals("ok");
         } catch (IOException ex) {
             Logger.getLogger(ArduinoZombie.class.getName()).log(Level.SEVERE, null, ex);
