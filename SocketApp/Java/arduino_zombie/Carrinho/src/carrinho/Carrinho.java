@@ -25,24 +25,42 @@ public class Carrinho {
         int r1 = 6;
         int r2 = 7;
         
-        while (true) {
-            arduino.pinMode(r1, ArduinoConstants.OUTPUT).
-                    digitalWrite(r1, ArduinoConstants.HIGH).
-                    pinMode(r2, ArduinoConstants.OUTPUT).
+    arduino.pinMode(r1, ArduinoConstants.OUTPUT).
+            pinMode(r2, ArduinoConstants.OUTPUT).
+            pinMode(l1, ArduinoConstants.OUTPUT).
+            pinMode(l2, ArduinoConstants.OUTPUT).
+            flush();
+
+    while (true) {
+            arduino.digitalWrite(r1, ArduinoConstants.HIGH).
                     digitalWrite(r2, ArduinoConstants.LOW).
-                    pinMode(l1, ArduinoConstants.OUTPUT).
                     digitalWrite(l1, ArduinoConstants.HIGH).
-                    pinMode(l2, ArduinoConstants.OUTPUT).
+                    digitalWrite(l2, ArduinoConstants.LOW).                
+                    flush();
+
+            Thread.sleep(2000);
+            
+            arduino.digitalWrite(r1, ArduinoConstants.HIGH).
+                    digitalWrite(r2, ArduinoConstants.LOW).
+                    digitalWrite(l1, ArduinoConstants.LOW).
+                    digitalWrite(l2, ArduinoConstants.HIGH).                
+                    flush();
+
+            Thread.sleep(2000);
+
+            arduino.digitalWrite(r1, ArduinoConstants.LOW).
+                    digitalWrite(r2, ArduinoConstants.HIGH).
+                    digitalWrite(l1, ArduinoConstants.HIGH).
                     digitalWrite(l2, ArduinoConstants.LOW).                
                     flush();
 
             Thread.sleep(2000);
 
-
-            arduino.digitalWrite(l1, ArduinoConstants.LOW).
-                    digitalWrite(l2, ArduinoConstants.LOW).
-                    digitalWrite(r1, ArduinoConstants.LOW).
-                    digitalWrite(r2, ArduinoConstants.LOW).
+        
+            arduino.digitalWrite(l1, ArduinoConstants.HIGH).
+                    digitalWrite(l2, ArduinoConstants.HIGH).
+                    digitalWrite(r1, ArduinoConstants.HIGH).
+                    digitalWrite(r2, ArduinoConstants.HIGH).
                     flush();
 
             Thread.sleep(2000);

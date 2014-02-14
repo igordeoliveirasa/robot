@@ -116,7 +116,7 @@ int power = 0;
 static int process(const unsigned char* buffer) {  
     ret = 1;
     //PMOU04|PMOU05|PMOU06|PMOU07|DWHI04|DWLO05|DWHI06|DWLO07
-    
+      //Serial.print("teste");
       memset(str_pin, 0x00, sizeof(str_pin));      
 
       pin = 0;
