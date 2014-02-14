@@ -48,7 +48,7 @@ public class ArduinoCommunicationTests {
         try {
             Socket socket = new Socket("192.168.1.200", 41085);
             communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), "123");
-            String result = communication.println("PMOU03|DWHI03");
+            String result = communication.println("PMOU03");
             assertEquals("ok", result);
             socket.close();
         } catch (IOException ex) {
@@ -61,7 +61,7 @@ public class ArduinoCommunicationTests {
         try {
             Socket socket = new Socket("192.168.1.200", 41085);
             communication = new ArduinoCommunication(new PrintWriter(socket.getOutputStream()), new BufferedReader(new InputStreamReader(socket.getInputStream())), "123");
-            String result = communication.println("DWLO03");
+            String result = communication.println("DWHI03");
             assertEquals("ok", result);
             socket.close();
         } catch (IOException ex) {

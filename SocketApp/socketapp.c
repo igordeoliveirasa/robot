@@ -105,13 +105,100 @@ void socket_app_appcall(void)
  * explicitly return - all return statements are hidden in the PSOCK
  * macros.
  */
- 
-int p3 = 3;
-int p4 = 4;
-int p5 = 5;
-int p6 = 6;
-int p7 = 7;
- 
+
+
+int ret;
+char option[5] = "";        
+char str_pin[5] = "";
+int pin = 0;
+int power = 0;
+
+static int process(const unsigned char* buffer) {  
+    ret = 1;
+    //PMOU04|PMOU05|PMOU06|PMOU07|DWHI04|DWLO05|DWHI06|DWLO07
+    
+      memset(str_pin, 0x00, sizeof(str_pin));      
+
+      pin = 0;
+      
+      //PM
+      if (buffer[0] == 'P' && buffer[1] == 'M') {  
+        strncpy(str_pin, buffer+4, 2);        
+        pin = atoi(str_pin);
+        
+        if (buffer[2] == 'O' && buffer[3] == 'U') {
+            pinMode(pin, OUTPUT);
+        }
+         else if (buffer[2] == 'I' && buffer[3] == 'N') {
+            pinMode(pin, INPUT);
+        }
+        else {
+          ret = 0;
+        }
+      }          
+      else if (buffer[0] == 'D' && buffer[1] == 'W') {
+        strncpy(str_pin, buffer+4, 2);
+        pin = atoi(str_pin);
+
+        if (buffer[2] == 'H' && buffer[3] == 'I') {
+            digitalWrite(pin, HIGH);
+        }
+        else if (buffer[2] == 'L' && buffer[3] == 'O') {
+            digitalWrite(pin, LOW);
+        }
+        else {
+          ret = 0;
+        }
+      }        
+      //AW25504
+      /*
+      else if (buffer[1] == 'A' && buffer[2] == 'W') {
+        strncpy(option, token+2, 3);
+        power = atoi(option);
+        strncpy(str_pin, token+5, 2);        
+        pin = atoi(str_pin);
+        analogWrite(pin, power);
+      }*/
+      else {
+          ret = 0;
+      }
+      delay(10);
+    return ret;
+}
+
+static int handle_connection(struct socket_app_state *s)
+{
+  PSOCK_BEGIN(&s->p);
+  
+  PSOCK_SEND_STR(&s->p, "ok\n");
+  
+  PSOCK_READTO(&s->p, '\n');
+  
+    
+  if (strncmp(s->inputbuffer, "123", 3)==0) {
+    PSOCK_SEND_STR(&s->p, "ok\n");    
+    while (1) {
+      memset(s->inputbuffer, 0x00, sizeof(s->inputbuffer));
+      PSOCK_READTO(&s->p, '\n');
+      
+      if (strncmp(s->inputbuffer, "exit", 4)==0) {
+        break;
+      }
+  
+      if (process(s->inputbuffer) == 1) {
+        PSOCK_SEND_STR(&s->p, "ok\n");
+      }
+      else {
+        PSOCK_SEND_STR(&s->p, "fail\n");
+      }
+    }
+  }
+  
+  PSOCK_CLOSE(&s->p);
+  PSOCK_END(&s->p);
+}
+
+/*
 static int handle_connection(struct socket_app_state *s)
 {
 
@@ -212,5 +299,5 @@ static int handle_connection(struct socket_app_state *s)
      
   PSOCK_CLOSE(&s->p);
   PSOCK_END(&s->p);
-}
+}*/
 /*---------------------------------------------------------------------------*/

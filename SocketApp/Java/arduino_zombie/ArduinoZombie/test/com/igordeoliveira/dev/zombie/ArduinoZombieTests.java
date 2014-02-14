@@ -99,11 +99,12 @@ public class ArduinoZombieTests {
         assertTrue(result);
     }
     
+    /*
     @Test
     public void testAnalogWritePin3() {
         boolean result = arduino.pinMode(3, ArduinoConstants.OUTPUT).analogWrite(3, 200).flush();
         assertTrue(result);
-    }
+    }*/
     
     
     

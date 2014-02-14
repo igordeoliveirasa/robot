@@ -92,15 +92,21 @@ public class ArduinoZombie {
     }
     
     public boolean flush() {
+        boolean ret = true;
         try {
-            String command = this.convertStackIntoCommand();
-            String result = communication.println(command);
-            stack.clear();
-            return result.equals("ok");
+            for (String command : this.stack) {
+                String result = communication.println(command);
+                ret = result.equals("ok");
+                if (!ret) {
+                    break;
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(ArduinoZombie.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            ret = false;
         }
+        stack.clear();
+        return ret;
     }
     
 
