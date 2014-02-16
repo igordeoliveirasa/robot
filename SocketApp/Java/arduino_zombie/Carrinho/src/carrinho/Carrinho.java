@@ -17,62 +17,74 @@ public class Carrinho {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws InterruptedException {
-        ArduinoZombie arduino = ArduinoZombie.getInstance("192.168.1.200", 41085, "123");
+    private ArduinoZombie arduino;
+    private int l1 = 4;
+    private int l2 = 5;
+    private int r1 = 6;
+    private int r2 = 7;
+    
+    public Carrinho() {
+        arduino = ArduinoZombie.getInstance("192.168.1.200", 41085, "123");
         
-        int l1 = 4;
-        int l2 = 5;
-        int r1 = 6;
-        int r2 = 7;
+        arduino.pinMode(r1, ArduinoConstants.OUTPUT).
+                pinMode(r2, ArduinoConstants.OUTPUT).
+                pinMode(l1, ArduinoConstants.OUTPUT).
+                pinMode(l2, ArduinoConstants.OUTPUT).
+                flush();
+    }
+    public boolean forward() {
+        return arduino.digitalWrite(r1, ArduinoConstants.LOW).
+                digitalWrite(r2, ArduinoConstants.HIGH).
+                digitalWrite(l1, ArduinoConstants.LOW).
+                digitalWrite(l2, ArduinoConstants.HIGH).                
+                flush();
+    }
+    public boolean backward() {
+        return arduino.digitalWrite(r1, ArduinoConstants.HIGH).
+                digitalWrite(r2, ArduinoConstants.LOW).
+                digitalWrite(l1, ArduinoConstants.HIGH).
+                digitalWrite(l2, ArduinoConstants.LOW).                
+                flush();
+    }
+    
+    public boolean left() {
+        //esquerda
+        return arduino.digitalWrite(r1, ArduinoConstants.LOW).
+                digitalWrite(r2, ArduinoConstants.HIGH).
+                digitalWrite(l1, ArduinoConstants.HIGH).
+                digitalWrite(l2, ArduinoConstants.LOW).                
+                flush();
         
-    arduino.pinMode(r1, ArduinoConstants.OUTPUT).
-            pinMode(r2, ArduinoConstants.OUTPUT).
-            pinMode(l1, ArduinoConstants.OUTPUT).
-            pinMode(l2, ArduinoConstants.OUTPUT).
-            flush();
-
-    while (true) {
-            arduino.digitalWrite(r1, ArduinoConstants.HIGH).
-                    digitalWrite(r2, ArduinoConstants.LOW).
-                    digitalWrite(l1, ArduinoConstants.HIGH).
-                    digitalWrite(l2, ArduinoConstants.LOW).                
-                    flush();
-
-            Thread.sleep(2000);
+    }
+    
+    public boolean right() {     
+        return arduino.digitalWrite(r1, ArduinoConstants.HIGH).
+                digitalWrite(r2, ArduinoConstants.LOW).
+                digitalWrite(l1, ArduinoConstants.LOW).
+                digitalWrite(l2, ArduinoConstants.HIGH).                
+                flush();
+    }
+    
+    public boolean stop() {
+        //stop
+        return arduino.digitalWrite(l1, ArduinoConstants.LOW).
+                digitalWrite(l2, ArduinoConstants.LOW).
+                digitalWrite(r1, ArduinoConstants.LOW).
+                digitalWrite(r2, ArduinoConstants.LOW).
+                flush();
+    } 
             
-            arduino.digitalWrite(r1, ArduinoConstants.LOW).
-                    digitalWrite(r2, ArduinoConstants.HIGH).
-                    digitalWrite(l1, ArduinoConstants.LOW).
-                    digitalWrite(l2, ArduinoConstants.HIGH).                
-                    flush();
-
-            Thread.sleep(2000);
-
-            arduino.digitalWrite(r1, ArduinoConstants.LOW).
-                    digitalWrite(r2, ArduinoConstants.HIGH).
-                    digitalWrite(l1, ArduinoConstants.HIGH).
-                    digitalWrite(l2, ArduinoConstants.LOW).                
-                    flush();
-
-            Thread.sleep(2000);
-
-            arduino.digitalWrite(r1, ArduinoConstants.HIGH).
-                    digitalWrite(r2, ArduinoConstants.LOW).
-                    digitalWrite(l1, ArduinoConstants.LOW).
-                    digitalWrite(l2, ArduinoConstants.HIGH).                
-                    flush();
-
-            Thread.sleep(2000);
-
-        
-            arduino.digitalWrite(l1, ArduinoConstants.HIGH).
-                    digitalWrite(l2, ArduinoConstants.HIGH).
-                    digitalWrite(r1, ArduinoConstants.HIGH).
-                    digitalWrite(r2, ArduinoConstants.HIGH).
-                    flush();
-
-            Thread.sleep(2000);
+    public static void main(String[] args) throws InterruptedException {
+        Carrinho carrinho = new Carrinho();        
+        while (true) {
+            carrinho.forward();
+            carrinho.stop();
+            carrinho.backward();
+            carrinho.stop();
+            carrinho.left();
+            carrinho.stop();
+            carrinho.right();
+            carrinho.stop();
         }
-        /**/
     }
 }
