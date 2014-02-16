@@ -40,8 +40,8 @@ public class Carrinho {
 
             Thread.sleep(2000);
             
-            arduino.digitalWrite(r1, ArduinoConstants.HIGH).
-                    digitalWrite(r2, ArduinoConstants.LOW).
+            arduino.digitalWrite(r1, ArduinoConstants.LOW).
+                    digitalWrite(r2, ArduinoConstants.HIGH).
                     digitalWrite(l1, ArduinoConstants.LOW).
                     digitalWrite(l2, ArduinoConstants.HIGH).                
                     flush();
@@ -52,6 +52,14 @@ public class Carrinho {
                     digitalWrite(r2, ArduinoConstants.HIGH).
                     digitalWrite(l1, ArduinoConstants.HIGH).
                     digitalWrite(l2, ArduinoConstants.LOW).                
+                    flush();
+
+            Thread.sleep(2000);
+
+            arduino.digitalWrite(r1, ArduinoConstants.HIGH).
+                    digitalWrite(r2, ArduinoConstants.LOW).
+                    digitalWrite(l1, ArduinoConstants.LOW).
+                    digitalWrite(l2, ArduinoConstants.HIGH).                
                     flush();
 
             Thread.sleep(2000);
