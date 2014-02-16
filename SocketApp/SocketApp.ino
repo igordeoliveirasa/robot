@@ -37,15 +37,54 @@ unsigned char ssid_len;
 unsigned char security_passphrase_len;
 //---------------------------------------------------------------------------
 
+char buffer[20];
+
+
 void setup()
 {
         Serial.begin(9600);
 	WiFi.init();
 }
 
+int ret;
+char option[5] = "";        
+char str_pin[5] = "";
+int pin = 0;
+int power = 0;
 void loop()
 {
-	WiFi.run();
+    WiFi.run();  
+  
+    
+    //PMOU04|PMOU05|PMOU06|PMOU07|DWHI04|DWLO05|DWHI06|DWLO07
+    //Serial.print("teste");
+    memset(str_pin, 0x00, sizeof(str_pin));      
+    pin = 0;
+      
+      //PM
+      if (buffer[0] == 'P' && buffer[1] == 'M') {  
+        strncpy(str_pin, buffer+4, 2);        
+        pin = atoi(str_pin);
+        
+        if (buffer[2] == 'O' && buffer[3] == 'U') {
+            pinMode(pin, OUTPUT);
+        }
+         else if (buffer[2] == 'I' && buffer[3] == 'N') {
+            pinMode(pin, INPUT);
+        }
+      }          
+      else if (buffer[0] == 'D' && buffer[1] == 'W') {
+        strncpy(str_pin, buffer+4, 2);
+        pin = atoi(str_pin);
+
+        if (buffer[2] == 'H' && buffer[3] == 'I') {
+            digitalWrite(pin, HIGH);
+        }
+        else if (buffer[2] == 'L' && buffer[3] == 'O') {
+            digitalWrite(pin, LOW);
+        }
+      }        
+      delay(10);
 }
 
 
