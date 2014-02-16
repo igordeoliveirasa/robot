@@ -85,14 +85,7 @@ public class Carrinho {
                 flush();
     }
     
-    public boolean stop() {
-        //stop
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Carrinho.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+    public boolean stop() {        
         return arduino.digitalWrite(l1, ArduinoConstants.LOW).
                 digitalWrite(l2, ArduinoConstants.LOW).
                 digitalWrite(r1, ArduinoConstants.LOW).
