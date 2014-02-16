@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.mockito.cglib.core.Constants;
 
 /**
  *
@@ -45,36 +46,51 @@ public class ArduinoZombie {
     }
 
     public ArduinoZombie pinMode(int pin, int pinType) {
-        String command = "PM";
+        int command = 0;
         
         if (pinType == ArduinoConstants.OUTPUT) {
-            command += "OU";
+            if (pin==04) {
+                command = ArduinoConstants.PMOU04;
+            } else if (pin==05) {
+                command = ArduinoConstants.PMOU05;
+            } else if (pin==06) {
+                command = ArduinoConstants.PMOU06; 
+            } else if (pin==07) {
+                command = ArduinoConstants.PMOU07;
+            }
         }
-        else if (pinType == ArduinoConstants.INPUT) {
-            command += "IN";
-        }
-        
-        command += String.format("%02d", pin);
-        
-        this.stack.add(command);
+        this.stack.add(""+command);
         return this;
     }
 
     
     public ArduinoZombie digitalWrite(int pin, int digitalMessage) {
-        String command = "DW";
+        int command = 0;
         
-        if (digitalMessage == ArduinoConstants.HIGH) {
-            command += "HI";
+        if (digitalMessage == ArduinoConstants.LOW) {
+            if (pin==04) {
+                command = ArduinoConstants.DWLO04;
+            } else if (pin==05) {
+                command = ArduinoConstants.DWLO05;
+            } else if (pin==06) {
+                command = ArduinoConstants.DWLO06; 
+            } else if (pin==07) {
+                command = ArduinoConstants.DWLO07;
+            }
         }
-        else if (digitalMessage == ArduinoConstants.LOW) {
-            command += "LO";
+        else if (digitalMessage == ArduinoConstants.HIGH) {
+            if (pin==04) {
+                command = ArduinoConstants.DWHI04;
+            } else if (pin==05) {
+                command = ArduinoConstants.DWHI05;
+            } else if (pin==06) {
+                command = ArduinoConstants.DWHI06;
+            } else if (pin==07) {
+                command = ArduinoConstants.DWHI07;
+            }            
         }
         
-        command += String.format("%02d", pin);
-        
-        this.stack.add(command);
-        
+        this.stack.add(""+command);
         return this;
     }
 
@@ -94,13 +110,17 @@ public class ArduinoZombie {
     public boolean flush() {
         boolean ret = true;
         try {
-            for (String command : this.stack) {
-                String result = communication.println(command);
-                ret = result.equals("ok");
-                if (!ret) {
-                    break;
-                }
-            }
+            String command = this.convertStackIntoCommand();
+            ret = communication.println(command).equals("ok");
+            
+            //for (String command : this.stack) {
+                
+              //  String result = communication.println(command);
+               // ret = result.equals("ok");
+                //if (!ret) {
+                //    break;
+               // }
+            //}
         } catch (IOException ex) {
             Logger.getLogger(ArduinoZombie.class.getName()).log(Level.SEVERE, null, ex);
             ret = false;

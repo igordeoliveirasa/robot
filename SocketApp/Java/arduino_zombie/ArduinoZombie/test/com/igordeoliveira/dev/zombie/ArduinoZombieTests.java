@@ -56,6 +56,12 @@ public class ArduinoZombieTests {
     @After
     public void tearDown() {
         try {
+            arduino.digitalWrite(04, ArduinoConstants.LOW).
+                    digitalWrite(05, ArduinoConstants.LOW).
+                    digitalWrite(06, ArduinoConstants.LOW).
+                    digitalWrite(07, ArduinoConstants.LOW).
+                    flush();
+                    
             socket.close();
         } catch (IOException ex) {
             Logger.getLogger(ArduinoZombieTests.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,38 +70,45 @@ public class ArduinoZombieTests {
     
     @Test
     public void testConvertStackIntoCommand1() {
-        arduino.pinMode(3, ArduinoConstants.OUTPUT);
-        assertEquals("PMOU03", arduino.convertStackIntoCommand());
+        arduino.pinMode(4, ArduinoConstants.OUTPUT);
+        assertEquals("4", arduino.convertStackIntoCommand());
     }
 
     @Test
     public void testConvertStackIntoCommand2() {
-        arduino.pinMode(3, ArduinoConstants.OUTPUT).
-                pinMode(4, ArduinoConstants.INPUT).
-                digitalWrite(3, ArduinoConstants.HIGH).
-                analogWrite(12, 33).
-                analogWrite(12, 255).
-                pinMode(13, ArduinoConstants.INPUT);
+        arduino.pinMode(4, ArduinoConstants.OUTPUT).
+                digitalWrite(4, ArduinoConstants.HIGH);
         
-        assertEquals("PMOU03|PMIN04|DWHI03|AW03312|AW25512|PMIN13", arduino.convertStackIntoCommand());
+        assertEquals( ArduinoConstants.PMOU04 + "|" + ArduinoConstants.DWHI04, arduino.convertStackIntoCommand());
     }
 
     
     @Test
     public void testPinModeOutputWithoutFlush() {
-        arduino.pinMode(3, ArduinoConstants.OUTPUT);
-        assertEquals("PMOU03", arduino.getStack().get(0));
+        arduino.pinMode(4, ArduinoConstants.OUTPUT);
+        assertEquals("4", arduino.getStack().get(0));
     }
     
     @Test
     public void testPinModeOutput() {
-        boolean result = arduino.pinMode(3, ArduinoConstants.OUTPUT).flush();
+        boolean result = arduino.pinMode(4, ArduinoConstants.OUTPUT).flush();
         assertTrue(result);
     }
     
     @Test
-    public void testDigitalWritePin3() {
-        boolean result = arduino.pinMode(3, ArduinoConstants.OUTPUT).digitalWrite(3, ArduinoConstants.HIGH).flush();
+    public void testDigitalWritePin4() {
+        boolean result = arduino.pinMode(4, ArduinoConstants.OUTPUT).digitalWrite(4, ArduinoConstants.HIGH).flush();
+        assertTrue(result);
+    }
+    
+    @Test
+    public void testDigitalWritePin4and5() {
+        boolean result = arduino.
+                pinMode(4, ArduinoConstants.OUTPUT).
+                pinMode(5, ArduinoConstants.OUTPUT).
+                digitalWrite(4, ArduinoConstants.HIGH).
+                digitalWrite(5, ArduinoConstants.LOW).
+                flush();
         assertTrue(result);
     }
     

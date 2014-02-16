@@ -39,6 +39,21 @@ unsigned char security_passphrase_len;
 
 char buffer[20];
 
+int PMOU04 = 4;
+int PMOU05 = 5;
+int PMOU06 = 6;
+int PMOU07 = 7;
+
+int DWHI04 = 14;
+int DWHI05 = 15;
+int DWHI06 = 16;
+int DWHI07 = 17;
+
+int DWLO04 = 24;
+int DWLO05 = 25;
+int DWLO06 = 26;
+int DWLO07 = 27;
+
 
 void setup()
 {
@@ -46,45 +61,72 @@ void setup()
 	WiFi.init();
 }
 
-int ret;
-char option[5] = "";        
-char str_pin[5] = "";
-int pin = 0;
-int power = 0;
+int cod = 0;
+char * token;
+char * tokenizer = "|";
+
+void process(char* buffer) {
+  
+    cod = atoi(buffer);
+    
+    if (cod == PMOU04) {  
+      pinMode(04, OUTPUT);
+    }
+    else if (cod == PMOU05) {  
+      pinMode(05, OUTPUT);
+    }
+    else if (cod == PMOU06) {  
+      pinMode(06, OUTPUT);
+    }
+    else if (cod == PMOU07) {  
+      pinMode(07, OUTPUT);
+    }
+    
+    //DigitalWrite HIGH
+    else if (cod == DWHI04) {  
+      digitalWrite(04, HIGH);
+    }
+    else if (cod == DWHI05) {  
+      digitalWrite(05, HIGH);
+    }
+    else if (cod == DWHI06) {  
+      digitalWrite(06, HIGH);
+    }    
+    else if (cod == DWHI07) {  
+      digitalWrite(07, HIGH);
+    }
+    
+    //DigitalWrite LOW
+    else if (cod == DWLO04) {  
+      digitalWrite(04, LOW);
+    }
+    else if (cod == DWLO05) {  
+      digitalWrite(05, LOW);
+    }
+    else if (cod == DWLO06) {  
+      digitalWrite(06, LOW);
+    }    
+    else if (cod == DWLO07) {  
+      digitalWrite(07, LOW);
+    }
+    
+}
+
 void loop()
 {
     WiFi.run();  
-  
     
-    //PMOU04|PMOU05|PMOU06|PMOU07|DWHI04|DWLO05|DWHI06|DWLO07
-    //Serial.print("teste");
-    memset(str_pin, 0x00, sizeof(str_pin));      
-    pin = 0;
-      
-      //PM
-      if (buffer[0] == 'P' && buffer[1] == 'M') {  
-        strncpy(str_pin, buffer+4, 2);        
-        pin = atoi(str_pin);
-        
-        if (buffer[2] == 'O' && buffer[3] == 'U') {
-            pinMode(pin, OUTPUT);
-        }
-         else if (buffer[2] == 'I' && buffer[3] == 'N') {
-            pinMode(pin, INPUT);
-        }
-      }          
-      else if (buffer[0] == 'D' && buffer[1] == 'W') {
-        strncpy(str_pin, buffer+4, 2);
-        pin = atoi(str_pin);
+    token = strtok (buffer, tokenizer);
+    
+    while (token != NULL)
+    {  
+      process(token); 
+      token = strtok (NULL, tokenizer);
+    }   
+    memset(buffer, 0x00, sizeof(buffer));
+    cod = 0;
 
-        if (buffer[2] == 'H' && buffer[3] == 'I') {
-            digitalWrite(pin, HIGH);
-        }
-        else if (buffer[2] == 'L' && buffer[3] == 'O') {
-            digitalWrite(pin, LOW);
-        }
-      }        
-      delay(10);
+    delay(10);
 }
 
 

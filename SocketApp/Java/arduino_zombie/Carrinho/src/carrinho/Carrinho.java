@@ -7,6 +7,8 @@ package carrinho;
 import com.igordeoliveira.dev.zombie.ArduinoCommunication;
 import com.igordeoliveira.dev.zombie.ArduinoConstants;
 import com.igordeoliveira.dev.zombie.ArduinoZombie;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -47,7 +49,7 @@ public class Carrinho {
                 flush();
     }
     
-    public boolean left() {
+    public boolean left_axis() {
         //esquerda
         return arduino.digitalWrite(r1, ArduinoConstants.LOW).
                 digitalWrite(r2, ArduinoConstants.HIGH).
@@ -57,8 +59,26 @@ public class Carrinho {
         
     }
     
-    public boolean right() {     
+    public boolean left() {
+        //esquerda
+        return arduino.digitalWrite(r1, ArduinoConstants.LOW).
+                digitalWrite(r2, ArduinoConstants.HIGH).
+                digitalWrite(l1, ArduinoConstants.LOW).
+                digitalWrite(l2, ArduinoConstants.LOW).                
+                flush();
+        
+    }
+    
+    public boolean right_axis() {     
         return arduino.digitalWrite(r1, ArduinoConstants.HIGH).
+                digitalWrite(r2, ArduinoConstants.LOW).
+                digitalWrite(l1, ArduinoConstants.LOW).
+                digitalWrite(l2, ArduinoConstants.HIGH).                
+                flush();
+    }
+    
+    public boolean right() {     
+        return arduino.digitalWrite(r1, ArduinoConstants.LOW).
                 digitalWrite(r2, ArduinoConstants.LOW).
                 digitalWrite(l1, ArduinoConstants.LOW).
                 digitalWrite(l2, ArduinoConstants.HIGH).                
@@ -67,6 +87,12 @@ public class Carrinho {
     
     public boolean stop() {
         //stop
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Carrinho.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return arduino.digitalWrite(l1, ArduinoConstants.LOW).
                 digitalWrite(l2, ArduinoConstants.LOW).
                 digitalWrite(r1, ArduinoConstants.LOW).
@@ -76,6 +102,7 @@ public class Carrinho {
             
     public static void main(String[] args) throws InterruptedException {
         Carrinho carrinho = new Carrinho();        
+        int i = 0;
         while (true) {
             carrinho.forward();
             carrinho.stop();
@@ -85,6 +112,7 @@ public class Carrinho {
             carrinho.stop();
             carrinho.right();
             carrinho.stop();
+            System.out.println("" + ++i);
         }
     }
 }
