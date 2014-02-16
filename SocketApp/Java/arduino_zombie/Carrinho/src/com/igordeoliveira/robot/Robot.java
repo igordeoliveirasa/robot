@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package carrinho;
+package com.igordeoliveira.robot;
 
 import com.igordeoliveira.dev.zombie.ArduinoCommunication;
 import com.igordeoliveira.dev.zombie.ArduinoConstants;
@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author igor
  */
-public class Carrinho {
+public class Robot {
 
     /**
      * @param args the command line arguments
@@ -25,7 +25,7 @@ public class Carrinho {
     private int r1 = 6;
     private int r2 = 7;
     
-    public Carrinho() {
+    public Robot() {
         arduino = ArduinoZombie.getInstance("192.168.1.200", 41085, "123");
         
         arduino.pinMode(r1, ArduinoConstants.OUTPUT).
@@ -92,9 +92,9 @@ public class Carrinho {
                 digitalWrite(r2, ArduinoConstants.LOW).
                 flush();
     } 
-            
+      /*      
     public static void main(String[] args) throws InterruptedException {
-        Carrinho carrinho = new Carrinho();        
+        Robot carrinho = new Robot();        
         int i = 0;
         while (true) {
             carrinho.forward();
@@ -107,5 +107,5 @@ public class Carrinho {
             carrinho.stop();
             System.out.println("" + ++i);
         }
-    }
+    }*/
 }

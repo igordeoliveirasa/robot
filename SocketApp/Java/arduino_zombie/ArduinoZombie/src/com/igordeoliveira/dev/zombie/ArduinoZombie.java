@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.mockito.cglib.core.Constants;
 
 /**
  *
@@ -41,6 +40,7 @@ public class ArduinoZombie {
             ArduinoZombie arduino = new ArduinoZombie(arduinoCommunication);
             return arduino;
         } catch (Exception ex) {
+        	ex.printStackTrace();
             return null;
         }
     }
